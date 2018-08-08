@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>equalExpertsTestFramework</groupId>
+    <artifactId>EqualExpertsTestFramework</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>EqualExpertsTestFramework</name>
+    <url>http://hotel-test.equalexperts.io/</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <testResources>
+            <testResource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.0</version>
+                <executions>
+                    <execution>
+                        <id>acceptance-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Fork count = 3 -->
+                            <forkCount>3</forkCount>
+                            <reuseForks>true</reuseForks>
+                            <argLine>-Duser.language=en</argLine>
+                            <argLine>-Xms256m -Xmx1024m</argLine>
+                            <argLine>-Dfile.encoding=UTF-8</argLine>
+                            <useFile>false</useFile>
+                            <includes>
+                                <include>**/*AT.class</include>
+                            </includes>
+                            <testFailureIgnore>true</testFailureIgnore>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>reportBuilder.ReportGenerator</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>3.5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-picocontainer</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>net.masterthought</groupId>
+            <artifactId>maven-cucumber-reporting</artifactId>
+            <version>3.19.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>2.2.4</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>Chrome</id>
+            <properties>
+                <browser>chrome</browser>
+            </properties>
+        </profile>
+        <profile>
+            <id>Firefox</id>
+            <properties>
+                <browser>firefox</browser>
+            </properties>
+        </profile>
+        <profile>
+            <id>Small View Port Portrait</id>
+            <properties>
+                <width>360</width>
+                <height>640</height>
+            </properties>
+        </profile>
+        <profile>
+            <id>Small View Port Landscape</id>
+            <properties>
+                <width>640</width>
+                <height>360</height>
+            </properties>
+        </profile>
+        <profile>
+            <id>Medium View Port Portrait</id>
+            <properties>
+                <width>768</width>
+                <height>1024</height>
+            </properties>
+        </profile>
+        <profile>
+            <id>Medium View Port Landscape</id>
+            <properties>
+                <width>1024</width>
+                <height>768</height>
+            </properties>
+        </profile>
+        <profile>
+            <id>Large View Port</id>
+            <properties>
+                <width>1280</width>
+                <height>800</height>
+            </properties>
+        </profile>
+        <profile>
+            <id>Extra Large View Port</id>
+            <properties>
+                <width>1920</width>
+                <height>1200</height>
+            </properties>
+        </profile>
+        <profile>
+            <id>Stage Environment</id>
+            <properties>
+                <environment>http://hotel-test.equalexperts-stg.io</environment>
+            </properties>
+        </profile>
+        <profile>
+            <id>QA Environment</id>
+            <properties>
+                <environment>http://hotel-test.equalexperts-qa.io</environment>
+            </properties>
+        </profile>
+        <profile>
+            <id>Production Environment</id>
+            <properties>
+                <environment>http://hotel-test.equalexperts.io</environment>
+            </properties>
+        </profile>
+    </profiles>
+</project>
